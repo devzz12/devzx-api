@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BANG DEVZX API</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Consolas&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #050505; --card: #111111; --text-main: #ffffff; --text-sub: #a1a1aa;
+            --accent: #bc13fe; --cyan: #00f3ff; --border: #333333; --sidebar-bg: #000000;
+            --grad: linear-gradient(90deg, #bc13fe, #00f3ff);
+        }
+        body.light {
+            --bg: #f0fdf4; --card: #ffffff; --text-main: #166534; --text-sub: #34a853;
+            --accent: #22c55e; --border: #bbf7d0; --sidebar-bg: #ffffff; --grad: linear-gradient(90deg, #166534, #22c55e);
+        }
+        body.oled {
+            --bg: #000000; --card: #0a0a0a; --text-main: #ffffff; --text-sub: #71717a;
+            --accent: #ffffff; --border: #18181b; --sidebar-bg: #000000; --grad: linear-gradient(90deg, #555, #000);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background: var(--bg); color: var(--text-main); transition: 0.5s; min-height: 100vh; overflow-x: hidden; position: relative; }
+        #canvas-galaxy { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+        body.light #canvas-galaxy { display: none; }
+        .grass-container { position: fixed; bottom: 0; left: 0; width: 100%; height: 80px; display: none; z-index: 0; pointer-events: none; }
+        body.light .grass-container { display: flex; align-items: flex-end; justify-content: space-around; }
+        .blade { width: 8px; background: #22c55e; border-radius: 10px; animation: sway 3s infinite alternate; transform-origin: bottom; }
+        @keyframes sway { from { transform: rotate(-10deg); } to { transform: rotate(10deg); } }
+        .header { position: fixed; top: 0; width: 100%; height: 75px; background: rgba(0,0,0,0.85); backdrop-filter: blur(20px); display: flex; align-items: center; justify-content: space-between; padding: 0 25px; z-index: 1000; border-bottom: 1px solid var(--border); }
+        .logo-area { display: flex; align-items: center; }
+        .logo { font-weight: 800; font-style: italic; font-size: 1.5rem; background: linear-gradient(90deg, #bc13fe, #00f3ff); -webkit-background-clip: text; color: transparent; margin-left: 15px; }
+        .btn-back { background: var(--grad); color: white; border: none; padding: 8px 15px; border-radius: 10px; font-weight: bold; cursor: pointer; display: none; font-size: 0.8rem; }
+        .sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100vh; background: var(--sidebar-bg); border-right: 1px solid var(--border); transition: 0.4s; z-index: 2000; padding: 30px; overflow-y: auto; }
+        .sidebar.active { left: 0; }
+        .nav-item { padding: 15px; cursor: pointer; color: var(--text-sub); font-weight: 600; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .nav-item:hover { color: var(--cyan); }
+        .container { margin-top: 100px; padding: 20px; max-width: 800px; margin-inline: auto; position: relative; z-index: 1; }
+        .welcome-card { text-align: center; padding: 10px 0; }
+        .profile-banner { width: 100%; max-width: 500px; height: auto; border-radius: 15px; border: 2px solid var(--cyan); margin-bottom: 15px; object-fit: contain; box-shadow: 0 0 25px rgba(0, 243, 255, 0.4); }
+        .typing-box { min-height: 40px; margin: 5px 0; font-weight: 600; color: var(--cyan); font-family: 'Consolas', monospace; font-size: 0.9rem; }
+        .stats-container { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
+        .stat-card { background: var(--card); border: 1px solid var(--border); padding: 15px; border-radius: 18px; text-align: center; }
+        .stat-card i { font-size: 1.4rem; color: var(--accent); margin-bottom: 8px; }
+        .stat-num { display: block; font-size: 1.1rem; font-weight: 800; color: var(--text-main); }
+        .stat-txt { font-size: 0.65rem; color: var(--text-sub); text-transform: uppercase; letter-spacing: 1px; }
+        .api-card { background: var(--card); border-radius: 25px; padding: 25px; margin-bottom: 20px; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.3); color: var(--text-main); }
+        .btn-get { background: var(--grad); color: white; border: none; padding: 10px 22px; border-radius: 12px; font-weight: 800; cursor: pointer; }
+        .status-badge { color: #10b981; font-weight: 800; font-size: 0.8rem; display: flex; align-items: center; gap: 5px; }
+        .interface-box { display: none; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border); }
+        .label-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .label-name { font-size: 0.7rem; font-weight: 800; color: var(--text-sub); text-transform: uppercase; letter-spacing: 1px; }
+        .copy-box { background: rgba(0,0,0,0.2); border: 1px solid var(--border); padding: 12px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
+        .copy-text { font-family: 'Consolas', monospace; font-size: 0.7rem; color: var(--cyan); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 85%; }
+        input { width: 100%; padding: 14px; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 12px; background: rgba(0,0,0,0.1); color: var(--text-main); outline: none; }
+        .btn-submit { width: 100%; padding: 15px; background: var(--grad); color: white; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; }
+        pre { background: #000; color: #7ee787; padding: 15px; border-radius: 12px; font-size: 0.8rem; overflow-x: auto; margin-top: 5px; border: 1px solid #333; white-space: pre-wrap; }
+        .hidden { display: none !important; }
+        #notif { position: fixed; bottom: 30px; left: 30px; background: white; color: black; padding: 15px 25px; border-radius: 15px; display: none; z-index: 10001; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border-left: 6px solid #10b981; font-weight: bold; }
+    </style>
+</head>
+<body class="dark">
+    <canvas id="canvas-galaxy"></canvas>
+    <div class="grass-container" id="grass-container"></div>
+    <header class="header">
+        <div class="logo-area">
+            <i class="fas fa-bars" id="open-sidebar" style="color: #fff; cursor: pointer; font-size: 1.6rem;"></i>
+            <div class="logo">BANG DEVZX API</div>
+        </div>
+        <button id="btn-back" class="btn-back" onclick="goHome()"><i class="fas fa-arrow-left"></i> BACK</button>
+    </header>
+    
+    <div class="sidebar" id="sidebar">
+        <h3 style="color:var(--text-sub); font-size: 0.7rem; margin-bottom: 15px;">THEME</h3>
+        <div class="nav-item" onclick="setTheme('dark')"><i class="fas fa-moon"></i> Dark Galaxy</div>
+        <div class="nav-item" onclick="setTheme('light')"><i class="fas fa-leaf"></i> Light Grass</div>
+        <div class="nav-item" onclick="setTheme('oled')"><i class="fas fa-star"></i> OLED Space</div>
+        <h3 style="color:var(--text-sub); font-size: 0.7rem; margin-top: 25px; margin-bottom: 15px;">KATEGORI</h3>
+        <div class="nav-item" onclick="showCategory('downloader')"><i class="fas fa-download"></i> Downloader</div>
+        <div class="nav-item" onclick="showCategory('search')"><i class="fas fa-search"></i> Search</div>
+        <h3 style="color:var(--text-sub); font-size: 0.7rem; margin-top: 25px; margin-bottom: 15px;">COMMUNITY</h3>
+        <a href="https://whatsapp.com/channel/0029Vb74pdrEAKWLtiq3KD3V" target="_blank" class="nav-item">
+            <i class="fab fa-whatsapp"></i> ʙᴀɴɢ ᴅᴇᴠᴢx
+        </a>
+        <a href="https://t.me/devzjomblo" target="_blank" class="nav-item">
+            <i class="fab fa-telegram-plane"></i> Telegram Admin
+        </a>
+    </div>
+
+    <div class="container">
+        <div id="welcome-view" class="welcome-card">
+            <img src="https://files.catbox.moe/qnjkew.jpg" alt="Logo DevZx" class="profile-banner">
+            <h1 style="font-size: 1.6rem; margin-bottom: 5px;">SELAMAT DATANG DI BANG DEVZX API</h1>
+            <div class="typing-box"><span id="text-anim"></span></div>
+            <div class="stats-container">
+                <div class="stat-card">
+                    <i class="fas fa-bolt"></i>
+                    <span id="stat-today" class="stat-num">0</span>
+                    <span class="stat-txt">Total Requests Today</span>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-crown"></i>
+                    <span id="stat-top" class="stat-num">None</span>
+                    <span class="stat-txt">Top API Request</span>
+                </div>
+            </div>
+            <p style="color: var(--text-sub); margin-top: 25px; font-size: 0.75rem;">Explore our features via the sidebar menu!</p>
+        </div>
+
+        <div id="cat-downloader" class="cat-group hidden">
+            <h2 style="margin-bottom: 20px; border-left: 5px solid var(--accent); padding-left: 15px;">Downloader</h2>
+            
+            <div class="api-card">
+                <div style="font-weight: 800; font-size: 1.2rem;">AIO Downloader</div>
+                <p style="color:var(--text-sub); font-size: 0.8rem; margin-bottom: 15px;">All in one downloader bypass.</p>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <button class="btn-get" onclick="toggleInterface('aio')">/ GET</button>
+                    <div class="status-badge">● Ready</div>
+                </div>
+                <div id="ui-aio" class="interface-box">
+                    <div class="label-row"><span class="label-name">Endpoint URL</span></div>
+                    <div class="copy-box"><div class="copy-text" id="end-aio">Loading...</div><i class="far fa-copy" onclick="doCopy('end-aio')" style="cursor:pointer; color:var(--cyan)"></i></div>
+                    <input type="text" id="key-aio" placeholder="Apikey (devzx18)">
+                    <input type="text" id="url-aio" placeholder="Paste link video">
+                    <button class="btn-submit" onclick="runApi('aio')">SUBMIT!</button>
+                    <div id="res-aio" style="display:none; margin-top:20px;">
+                        <div class="label-row"><span class="label-name">JSON Response</span><i class="far fa-copy" onclick="doCopy('json-aio')" style="cursor:pointer; color:var(--cyan)"></i></div>
+                        <pre id="json-aio"></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="api-card">
+                <div style="font-weight: 800; font-size: 1.2rem;">YTMP4 Downloader</div>
+                <p style="color:var(--text-sub); font-size: 0.8rem; margin-bottom: 15px;">YouTube MP4 Download.</p>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <button class="btn-get" onclick="toggleInterface('ytmp4')">/ GET</button>
+                    <div class="status-badge">● Ready</div>
+                </div>
+                <div id="ui-ytmp4" class="interface-box">
+                    <div class="label-row"><span class="label-name">Endpoint URL</span></div>
+                    <div class="copy-box"><div class="copy-text" id="end-ytmp4">Loading...</div><i class="far fa-copy" onclick="doCopy('end-ytmp4')" style="cursor:pointer; color:var(--cyan)"></i></div>
+                    <input type="text" id="key-ytmp4" placeholder="Apikey (devzx18)">
+                    <input type="text" id="url-ytmp4" placeholder="Paste link YouTube">
+                    <button class="btn-submit" onclick="runApi('ytmp4')">GAS!</button>
+                    <div id="res-ytmp4" style="display:none; margin-top:20px;">
+                        <div class="label-row"><span class="label-name">JSON Response</span><i class="far fa-copy" onclick="doCopy('json-ytmp4')" style="cursor:pointer; color:var(--cyan)"></i></div>
+                        <pre id="json-ytmp4"></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="api-card">
+                <div style="font-weight: 800; font-size: 1.2rem;">Instagram Download</div>
+                <p style="color:var(--text-sub); font-size: 0.8rem; margin-bottom: 15px;">Download Reel/Photo IG.</p>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <button class="btn-get" onclick="toggleInterface('ig')">/ GET</button>
+                    <div class="status-badge">● Ready</div>
+                </div>
+                <div id="ui-ig" class="interface-box">
+                    <div class="label-row"><span class="label-name">Endpoint URL</span></div>
+                    <div class="copy-box"><div class="copy-text" id="end-ig">Loading...</div><i class="far fa-copy" onclick="doCopy('end-ig')" style="cursor:pointer; color:var(--cyan)"></i></div>
+                    <input type="text" id="key-ig" placeholder="Apikey (devzx18)">
+                    <input type="text" id="url-ig" placeholder="Link Instagram">
+                    <button class="btn-submit" onclick="runApi('ig')">SUBMIT</button>
+                    <div id="res-ig" style="display:none; margin-top:20px;">
+                        <div class="label-row"><span class="label-name">JSON Response</span><i class="far fa-copy" onclick="doCopy('json-ig')" style="cursor:pointer; color:var(--cyan)"></i></div>
+                        <pre id="json-ig"></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="api-card">
+                <div style="font-weight: 800; font-size: 1.2rem;">TikTok Downloader</div>
+                <p style="color:var(--text-sub); font-size: 0.8rem; margin-bottom: 15px;">Video no watermark</p>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <button class="btn-get" onclick="toggleInterface('tiktok')">/ GET</button>
+                    <div class="status-badge">● Ready</div>
+                </div>
+                <div id="ui-tiktok" class="interface-box">
+                    <div class="label-row"><span class="label-name">Endpoint URL</span></div>
+                    <div class="copy-box"><div class="copy-text" id="end-tiktok">Loading...</div><i class="far fa-copy" onclick="doCopy('end-tiktok')" style="cursor:pointer; color:var(--cyan)"></i></div>
+                    <input type="text" id="key-tiktok" placeholder="Apikey (devzx18)">
+                    <input type="text" id="url-tiktok" placeholder="Paste link video">
+                    <button class="btn-submit" onclick="runApi('tiktok')">SUBMIT</button>
+                    <div id="res-tiktok" style="display:none; margin-top:20px;">
+                        <div class="label-row"><span class="label-name">JSON Response</span><i class="far fa-copy" onclick="doCopy('json-tiktok')" style="cursor:pointer; color:var(--cyan)"></i></div>
+                        <pre id="json-tiktok"></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="cat-search" class="cat-group hidden">
+            <h2 style="margin-bottom: 20px; border-left: 5px solid var(--accent); padding-left: 15px;">Search</h2>
+            <div class="api-card">
+                <div style="font-weight: 800; font-size: 1.2rem;">NPM Search</div>
+                <p style="color:var(--text-sub); font-size: 0.8rem; margin-bottom: 15px;">Cari package library Node.js.</p>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <button class="btn-get" onclick="toggleInterface('npm')">/ GET</button>
+                    <div class="status-badge">● Ready</div>
+                </div>
+                <div id="ui-npm" class="interface-box">
+                    <div class="label-row"><span class="label-name">Endpoint URL</span></div>
+                    <div class="copy-box"><div class="copy-text" id="end-npm">Loading...</div><i class="far fa-copy" onclick="doCopy('end-npm')" style="cursor:pointer; color:var(--cyan)"></i></div>
+                    <input type="text" id="key-npm" placeholder="Apikey (devzx18)">
+                    <input type="text" id="q-npm" placeholder="Nama package">
+                    <button class="btn-submit" onclick="runApi('npm')">SUBMIT</button>
+                    <div id="res-npm" style="display:none; margin-top:15px;">
+                        <div class="label-row"><span class="label-name">JSON Response</span><i class="far fa-copy" onclick="doCopy('json-npm')" style="cursor:pointer; color:var(--cyan)"></i></div>
+                        <pre id="json-npm"></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="notif">Tersalin!</div>
+
+    <script>
+        // ANTI-CURL
+        if (navigator.userAgent.toLowerCase().includes('curl') || navigator.userAgent.toLowerCase().includes('wget')) {
+            window.location.href = "about:blank";
+        }
+
+        async function fetchRealStats() {
+            try {
+                const res = await fetch('/api/stats');
+                if (!res.ok) throw new Error();
+                const data = await res.json();
+                document.getElementById('stat-today').innerText = (data.totalToday || 0).toLocaleString();
+                // FIX TOP API Agar Tidak Eror
+                const topStr = data.topFeature;
+                document.getElementById('stat-top').innerText = (!topStr || topStr === "None" || topStr === "Error") ? "None" : topStr;
+            } catch (e) {
+                document.getElementById('stat-today').innerText = "0";
+                document.getElementById('stat-top').innerText = "None";
+            }
+        }
+        fetchRealStats(); setInterval(fetchRealStats, 10000);
+
+        const sb = document.getElementById('sidebar');
+        const welcomeView = document.getElementById('welcome-view');
+        const textAnim = document.getElementById('text-anim');
+        const quotes = ["HI WELCOME IN BANG DEVZX API", "BANG DEVZX API GRATIS DAN COCOK BUAT PROJECT BOT WHATSAPP ATAU TELEGRAM KAMU", "REST API GRATISAN DENGAN FITUR MENARIK! 🚀", "BANG DEVZX API GRATIS SELAMANYA"];
+        let qIdx = 0, charIdx = 0, isDel = false;
+        function type() {
+            const current = quotes[qIdx];
+            if (isDel) { textAnim.textContent = current.substring(0, charIdx - 1); charIdx--; }
+            else { textAnim.textContent = current.substring(0, charIdx + 1); charIdx++; }
+            let speed = isDel ? 40 : 80;
+            if (!isDel && charIdx === current.length) { speed = 2000; isDel = true; }
+            else if (isDel && charIdx === 0) { isDel = false; qIdx = (qIdx + 1) % quotes.length; speed = 500; }
+            setTimeout(type, speed);
+        }
+        type();
+
+        document.getElementById('open-sidebar').onclick = () => sb.classList.add('active');
+        window.onclick = (e) => { if (e.target.id !== 'open-sidebar' && !sb.contains(e.target)) sb.classList.remove('active'); }
+
+        function goHome() {
+            document.querySelectorAll('.cat-group').forEach(el => el.classList.add('hidden'));
+            welcomeView.classList.remove('hidden');
+            document.getElementById('btn-back').style.display = 'none';
+            sb.classList.remove('active');
+        }
+        function showCategory(cat) {
+            document.querySelectorAll('.cat-group').forEach(el => el.classList.add('hidden'));
+            welcomeView.classList.add('hidden');
+            document.getElementById('cat-' + cat).classList.remove('hidden');
+            document.getElementById('btn-back').style.display = 'block';
+            sb.classList.remove('active');
+        }
+        function setTheme(t) { document.body.className = t; sb.classList.remove('active'); }
+        
+        // FIX ENDPOINT URL DISPLAY
+        function toggleInterface(id) {
+            const ui = document.getElementById('ui-' + id);
+            document.querySelectorAll('.interface-box').forEach(el => { if (el.id !== 'ui-' + id) el.style.display = 'none'; });
+            ui.style.display = (ui.style.display === 'block') ? 'none' : 'block';
+            
+            updateEndpointUrl(id);
+        }
+
+        function updateEndpointUrl(id) {
+            const key = document.getElementById('key-' + id).value || "YOUR_APIKEY";
+            let val = "";
+            if (id === 'npm') val = document.getElementById('q-' + id).value || "QUERY";
+            else val = document.getElementById('url-' + id).value || "URL";
+            
+            const baseUrl = window.location.origin;
+            const folder = (id === 'npm') ? '/api/search/' : '/api/download/';
+            const paramName = (id === 'npm') ? 'q' : 'url';
+            
+            const fullUrl = `${baseUrl}${folder}${id}?${paramName}=${encodeURIComponent(val)}&apikey=${key}`;
+            document.getElementById('end-' + id).innerText = fullUrl;
+        }
+
+        // Jalankan update URL setiap kali ngetik di input
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('input', (e) => {
+                const id = e.target.id.split('-')[1];
+                updateEndpointUrl(id);
+            });
+        });
+
+        function doCopy(id) {
+            const text = document.getElementById(id).innerText;
+            const temp = document.createElement('textarea');
+            temp.value = text; document.body.appendChild(temp);
+            temp.select(); document.execCommand('copy');
+            document.body.removeChild(temp);
+            const n = document.getElementById('notif'); n.style.display = 'block';
+            setTimeout(() => n.style.display = 'none', 3000);
+        }
+
+        async function runApi(type) {
+            const key = document.getElementById('key-' + type).value;
+            const valInput = document.getElementById('url-' + type) || document.getElementById('q-' + type);
+            const val = valInput.value;
+            if(!key || !val) return alert("Lengkapi data!");
+            
+            const route = (type === 'npm') ? '/api/search/npm?q=' : '/api/download/' + type + '?url=';
+            const endpoint = route + encodeURIComponent(val) + '&apikey=' + key;
+            
+            document.getElementById('res-' + type).style.display = 'block';
+            document.getElementById('json-' + type).innerText = "Processing...";
+            
+            try {
+                const res = await fetch(endpoint);
+                const data = await res.json();
+                document.getElementById('json-' + type).innerText = JSON.stringify(data, null, 2);
+                fetchRealStats();
+            } catch (e) { 
+                document.getElementById('json-' + type).innerText = "Yah, error bos!"; 
+            }
+        }
+
+        const canvas = document.getElementById('canvas-galaxy');
+        const ctx = canvas.getContext('2d');
+        let stars = [];
+        function initGalaxy() {
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+            stars = [];
+            for (let i = 0; i < 200; i++) stars.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, size: Math.random() * 2, speed: Math.random() * 0.4 });
+        }
+        function drawGalaxy() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height); ctx.fillStyle = "white";
+            stars.forEach(s => { ctx.beginPath(); ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2); ctx.fill(); s.y += s.speed; if (s.y > canvas.height) s.y = 0; });
+            requestAnimationFrame(drawGalaxy);
+        }
+        initGalaxy(); drawGalaxy();
+    </script>
+</body>
+</html>
