@@ -60,7 +60,6 @@ const ytmp4 = require('./download/ytmp4');
 const igDownload = require('./download/ig');
 const tiktok = require('./download/tiktok');
 const npmSearch = require('./search/npm');
-const youtube = require('./download/youtube');
 
 // ==========================================
 //                 RUTE API
@@ -68,7 +67,6 @@ const youtube = require('./download/youtube');
 
 app.get('/api/download/ytmp4', trackRequest('YTMP4', 'Downloader'), ytmp4);
 app.get('/api/download/ig', trackRequest('Instagram', 'Downloader'), igDownload);
-app.get('/api/download/youtube', trackRequest('YouTube', 'Downloader'), youtube);
 app.get('/api/download/tiktok', trackRequest('TikTok', 'Downloader'), tiktok);
 app.get('/api/search/npm', trackRequest('NPM Search', 'Search'), npmSearch);
 
