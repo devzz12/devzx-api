@@ -19,7 +19,6 @@ app.use((req, res, next) => {
     const userAgent = req.get('User-Agent') || "";
     const botList = ['curl', 'wget', 'python', 'go-http', 'node-fetch', 'axios', 'postman'];
     const isBot = botList.some(bot => userAgent.toLowerCase().includes(bot));
-    
     if (req.path === '/' && isBot) {
         return res.status(403).send("Akses Ditolak: Terminal tidak diizinkan mengakses dashboard.");
     }
@@ -34,33 +33,35 @@ const FIREBASE_URL = "https://devzx18-default-rtdb.firebaseio.com/";
 const trackRequest = (featureName, category) => {
     return async (req, res, next) => {
         const today = new Date().toDateString().replace(/\s/g, '_');
-        
         try {
+            // Update Total Request Hari Ini
             const currentTotalRes = await axios.get(`${FIREBASE_URL}stats/total/${today}.json`);
             const newTotal = (currentTotalRes.data || 0) + 1;
             await axios.put(`${FIREBASE_URL}stats/total/${today}.json`, newTotal);
 
+            // Update Count per Fitur (Untuk Top API)
             const currentFeatRes = await axios.get(`${FIREBASE_URL}stats/features/${featureName}.json`);
             const newFeatCount = (currentFeatRes.data || 0) + 1;
             await axios.put(`${FIREBASE_URL}stats/features/${featureName}.json`, newFeatCount);
 
-            const fullUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
-            console.log(`\x1b[32m%s\x1b[0m`, `log request : ${featureName} >-< ${category} : ${fullUrl}`);
+            console.log(`\x1b[32m%s\x1b[0m`, `log request : ${featureName} >-< ${category}`);
         } catch (e) {
-            // Lanjut jika firebase error
+            // Tetap lanjut meski firebase error
         }
         next();
     };
 };
 
 // ==========================================
-//             IMPORT FITUR API
+//              IMPORT FITUR API
 // ==========================================
 const ytmp4 = require('./download/ytmp4');
 const igDownload = require('./download/ig');
 const tiktok = require('./download/tiktok');
 const npmSearch = require('./search/npm');
 const carbon = require('./tools/carbon');
+const upskel = require('./tools/upscaler'); // Tambahan fitur baru
+
 // ==========================================
 //                 RUTE API
 // ==========================================
@@ -69,34 +70,34 @@ app.get('/api/download/ytmp4', trackRequest('YTMP4', 'Downloader'), ytmp4);
 app.get('/api/download/ig', trackRequest('Instagram', 'Downloader'), igDownload);
 app.get('/api/download/tiktok', trackRequest('TikTok', 'Downloader'), tiktok);
 app.get('/api/search/npm', trackRequest('NPM Search', 'Search'), npmSearch);
-// Endpoint Tools Carbon
-app.get('/api/tools/carbon', async (req, res) => {
-   const { code, color, apikey } = req.query;
 
-   // Validasi Apikey
-   if (apikey !== "devzx18") return res.status(403).json({ 
-      status: false, 
-      error: "Apikey salah atau tidak ditemukan!" 
-   });
+// Endpoint Tools Carbon (Sudah Sinkron Firebase)
+app.get('/api/tools/carbon', trackRequest('Carbon Code', 'Tools'), async (req, res) => {
+    const { code, color, apikey } = req.query;
+    if (apikey !== CONFIG.apikey) return res.status(403).json({ status: false, error: "Apikey salah!" });
+    if (!code) return res.status(400).json({ status: false, error: "Mana kodenya lek?" });
 
-   // Validasi Input
-   if (!code) return res.status(400).json({ 
-      status: false, 
-      error: "Mana kodenya lek? Isi parameter 'code' ya!" 
-   });
+    try {
+        const buffer = await carbon(code, color || "#ADD8E6");
+        res.set("Content-Type", "image/png");
+        res.send(buffer);
+    } catch (e) {
+        res.status(500).json({ status: false, error: e.message });
+    }
+});
 
-   try {
-      const buffer = await carbon(code, color || "#ADD8E6");
-      
-      // Set header agar browser tahu ini file gambar
-      res.set("Content-Type", "image/png");
-      res.send(buffer);
-   } catch (e) {
-      res.status(500).json({ 
-         status: false, 
-         error: "Gagal generate gambar: " + e.message 
-      });
-   }
+// Endpoint Tools ImgUpscaler (Fitur Baru)
+app.get('/api/tools/imgupscaler', trackRequest('ImgUpscaler', 'Tools'), async (req, res) => {
+    const { url, scale, apikey } = req.query;
+    if (apikey !== CONFIG.apikey) return res.status(403).json({ status: false, error: "Apikey salah!" });
+    if (!url) return res.status(400).json({ status: false, error: "Link gambarnya mana?" });
+
+    try {
+        const result = await upskel.upload(url, scale || 2);
+        res.json(result);
+    } catch (e) {
+        res.status(500).json({ status: false, error: e.message });
+    }
 });
 
 app.get('/api/download/aio', trackRequest('AIO', 'Downloader'), async (req, res) => {
@@ -125,11 +126,11 @@ app.get('/api/stats', async (req, res) => {
         const today = new Date().toDateString().replace(/\s/g, '_');
         const totalRes = await axios.get(`${FIREBASE_URL}stats/total/${today}.json`);
         const featRes = await axios.get(`${FIREBASE_URL}stats/features.json`);
-        
+
         const allFeatures = featRes.data || {};
         let topFeature = "None";
         let maxVal = 0;
-        
+
         for (const [name, count] of Object.entries(allFeatures)) {
             if (count > maxVal) {
                 maxVal = count;
@@ -146,10 +147,8 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../docs.html'));
 });
 
-// WAJIB UNTUK VERCEL: Export aplikasi Express
 module.exports = app;
 
-// JALANKAN SERVER (Hanya aktif jika dijalankan manual/lokal, bukan di Vercel)
 if (require.main === module) {
     const PORT = process.env.PORT || 1992;
     app.listen(PORT, '0.0.0.0', () => {
@@ -159,7 +158,6 @@ if (require.main === module) {
         console.log(`\x1b[36m%s\x1b[0m`, `=========================================`);
         console.log(` PORT    : ${PORT}`);
         console.log(` STATS   : Linked to Firebase Realtime DB`);
-        console.log(` PROTECT : Anti-CURL Dashboard Active`);
         console.log(`\x1b[36m%s\x1b[0m`, `=========================================`);
     });
 }
