@@ -1,5 +1,5 @@
 const CONFIG = {
-    adminName: "DevZx Premier",
+    adminName: "BANG DEVZZ",
     adminUser: "devzx2010",
     adminPass: "3d72c8418241101",
     ownerKey: "devzx2010", 
