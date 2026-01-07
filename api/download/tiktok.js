@@ -15,7 +15,7 @@ module.exports = async (req, res) => {
         const response = await axios.get(`https://ditzz-hosting-eta.vercel.app/download/tiktok?apikey=ditzz&url=${encodeURIComponent(url)}`);
         res.json({
             status: true,
-            creator: "DevZx",
+            creator: "BANG DEVZX",
             result: response.data.result
         });
     } catch (e) {
