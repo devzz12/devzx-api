@@ -55,6 +55,7 @@ const trackRequest = (featureName, category) => {
 // ==========================================
 //              IMPORT FITUR API
 // ==========================================
+const mediafire = require('./download/mediafire');
 const ytmp4 = require('./download/ytmp4');
 const igDownload = require('./download/ig');
 const tiktok = require('./download/tiktok');
@@ -65,7 +66,7 @@ const upskel = require('./tools/upscaler'); // Tambahan fitur baru
 // ==========================================
 //                 RUTE API
 // ==========================================
-
+app.get('/api/download/mediafire', trackRequest('MediaFire', 'Downloader'), mediafire);
 app.get('/api/download/ytmp4', trackRequest('YTMP4', 'Downloader'), ytmp4);
 app.get('/api/download/ig', trackRequest('Instagram', 'Downloader'), igDownload);
 app.get('/api/download/tiktok', trackRequest('TikTok', 'Downloader'), tiktok);
