@@ -60,7 +60,7 @@ const ytmp4 = require('./download/ytmp4');
 const igDownload = require('./download/ig');
 const tiktok = require('./download/tiktok');
 const npmSearch = require('./search/npm');
-
+const carbon = require('./tools/carbon');
 // ==========================================
 //                 RUTE API
 // ==========================================
@@ -69,6 +69,35 @@ app.get('/api/download/ytmp4', trackRequest('YTMP4', 'Downloader'), ytmp4);
 app.get('/api/download/ig', trackRequest('Instagram', 'Downloader'), igDownload);
 app.get('/api/download/tiktok', trackRequest('TikTok', 'Downloader'), tiktok);
 app.get('/api/search/npm', trackRequest('NPM Search', 'Search'), npmSearch);
+// Endpoint Tools Carbon
+app.get('/api/tools/carbon', async (req, res) => {
+   const { code, color, apikey } = req.query;
+
+   // Validasi Apikey
+   if (apikey !== "devzx18") return res.status(403).json({ 
+      status: false, 
+      error: "Apikey salah atau tidak ditemukan!" 
+   });
+
+   // Validasi Input
+   if (!code) return res.status(400).json({ 
+      status: false, 
+      error: "Mana kodenya lek? Isi parameter 'code' ya!" 
+   });
+
+   try {
+      const buffer = await carbon(code, color || "#ADD8E6");
+      
+      // Set header agar browser tahu ini file gambar
+      res.set("Content-Type", "image/png");
+      res.send(buffer);
+   } catch (e) {
+      res.status(500).json({ 
+         status: false, 
+         error: "Gagal generate gambar: " + e.message 
+      });
+   }
+});
 
 app.get('/api/download/aio', trackRequest('AIO', 'Downloader'), async (req, res) => {
     const { url, apikey } = req.query;
