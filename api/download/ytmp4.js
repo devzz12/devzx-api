@@ -40,7 +40,7 @@ module.exports = async (req, res) => {
             if (selected && selected.download_url) {
                 return res.json({
                     status: true,
-                    creator: "DevZx",
+                    creator: "ʙᴀɴɢ ᴅᴇᴠᴢx",
                     result: {
                         title: response.data.data.title,
                         downloadUrl: selected.download_url,
