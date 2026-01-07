@@ -222,7 +222,7 @@
                     <div class="copy-box"><div class="copy-text" id="end-carbon">Loading...</div><i class="far fa-copy" onclick="doCopy('end-carbon')" style="cursor:pointer; color:var(--cyan)"></i></div>
                     <input type="text" id="key-carbon" placeholder="Apikey (devzx18)"><input type="text" id="code-carbon" placeholder="Tulis kodemu di sini">
                     <button class="btn-submit" onclick="runApi('carbon')">GENERATE!</button>
-                    <div id="res-carbon" style="display:none; margin-top:15px; text-align: center;"><img id="img-carbon" src="" style="max-width: 100%; border-radius: 12px; border: 1px solid var(--border);"></div>
+                    <div id="res-carbon" style="display:none; margin-top:15px; text-align: center;"><img id="img-carbon" src="" alt="Carbon Result" style="max-width: 100%; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 10px;"></div>
                 </div>
             </div>
             <div class="api-card">
@@ -251,13 +251,16 @@
             try {
                 const res = await fetch('/api/admin/login', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ user, pass }) });
                 const data = await res.json();
-                if (data.status) { alert("Login Berhasil! Welcome."); closeLogin(); document.getElementById('admin-panel').classList.remove('hidden'); updateAdminPanel(data); } 
-                else { alert(data.message); }
+                if (data.status) { 
+                    alert("Login Berhasil! Welcome."); 
+                    closeLogin(); 
+                    document.getElementById('admin-panel').classList.remove('hidden'); 
+                    updateAdminPanel(data); 
+                } else { alert(data.message); }
             } catch(e) { alert("Server error!"); }
         }
-        function updateAdminPanel(data) {
-            document.getElementById('admin-info').innerHTML = `<p><b>Owner:</b> ${data.owner}</p><p><b>Apikey:</b> ${data.apikey}</p><p><b>Limit:</b> ${data.limit}/hari</p>`;
-        }
+
+        function updateAdminPanel(data) { fetchRealStats(); }
 
         // STATS & UI
         async function fetchRealStats() {
@@ -266,8 +269,14 @@
                 const data = await res.json();
                 document.getElementById('stat-today').innerText = (data.totalToday || 0).toLocaleString();
                 document.getElementById('stat-top').innerText = data.topFeature || "None";
-                if(!document.getElementById('admin-panel').classList.contains('hidden')) {
-                    document.getElementById('admin-info').innerHTML = `<p><b>Owner:</b> DevZx Premier</p><p><b>Limit Terpakai:</b> ${data.limitUsed} / ${data.limitMax}</p>`;
+                
+                const adminPanel = document.getElementById('admin-panel');
+                if(!adminPanel.classList.contains('hidden')) {
+                    document.getElementById('admin-info').innerHTML = `
+                        <p><b>👑 Owner:</b> DevZx Premier</p>
+                        <p><b>🔑 Owner Key (devzx2010):</b> ${data.ownerLimit.used} / ${data.ownerLimit.max}</p>
+                        <p><b>🔑 User Key (devzx18):</b> ${data.userLimit.used} / ${data.userLimit.max}</p>
+                    `;
                 }
             } catch (e) { }
         }
