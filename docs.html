@@ -76,9 +76,12 @@
         <div class="nav-item" onclick="setTheme('dark')"><i class="fas fa-moon"></i> Dark Galaxy</div>
         <div class="nav-item" onclick="setTheme('light')"><i class="fas fa-leaf"></i> Light Grass</div>
         <div class="nav-item" onclick="setTheme('oled')"><i class="fas fa-star"></i> OLED Space</div>
+        
         <h3 style="color:var(--text-sub); font-size: 0.7rem; margin-top: 25px; margin-bottom: 15px;">KATEGORI</h3>
         <div class="nav-item" onclick="showCategory('downloader')"><i class="fas fa-download"></i> Downloader</div>
         <div class="nav-item" onclick="showCategory('search')"><i class="fas fa-search"></i> Search</div>
+        <div class="nav-item" onclick="showCategory('tools')"><i class="fas fa-tools"></i> Tools</div>
+        
         <h3 style="color:var(--text-sub); font-size: 0.7rem; margin-top: 25px; margin-bottom: 15px;">COMMUNITY</h3>
         <a href="https://whatsapp.com/channel/0029Vb74pdrEAKWLtiq3KD3V" target="_blank" class="nav-item">
             <i class="fab fa-whatsapp"></i> ʙᴀɴɢ ᴅᴇᴠᴢx
@@ -214,6 +217,33 @@
                 </div>
             </div>
         </div>
+
+        <div id="cat-tools" class="cat-group hidden">
+            <h2 style="margin-bottom: 20px; border-left: 5px solid var(--accent); padding-left: 15px;">Tools</h2>
+            <div class="api-card">
+                <div style="font-weight: 800; font-size: 1.2rem;">Carbon Code</div>
+                <p style="color:var(--text-sub); font-size: 0.8rem; margin-bottom: 15px;">Ubah teks kode jadi gambar estetik.</p>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <button class="btn-get" onclick="toggleInterface('carbon')">/ GET</button>
+                    <div class="status-badge">● Ready</div>
+                </div>
+                <div id="ui-carbon" class="interface-box">
+                    <div class="label-row"><span class="label-name">Endpoint URL</span></div>
+                    <div class="copy-box"><div class="copy-text" id="end-carbon">Loading...</div><i class="far fa-copy" onclick="doCopy('end-carbon')" style="cursor:pointer; color:var(--cyan)"></i></div>
+                    <input type="text" id="key-carbon" placeholder="Apikey (devzx18)">
+                    <input type="text" id="code-carbon" placeholder="Tulis kodemu di sini">
+                    <input type="text" id="color-carbon" placeholder="Background Color (opsional: #ADD8E6)">
+                    <button class="btn-submit" onclick="runApi('carbon')">GENERATE!</button>
+                    <div id="res-carbon" style="display:none; margin-top:15px; text-align: center;">
+                        <div class="label-row"><span class="label-name">Hasil Gambar</span></div>
+                        <img id="img-carbon" src="" alt="Carbon Result" style="max-width: 100%; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 10px;">
+                        <br>
+                        <a id="dl-carbon" href="#" target="_blank" class="btn-get" style="text-decoration: none; display: inline-block;">Download Image</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
     <div id="notif">Tersalin!</div>
 
@@ -229,7 +259,6 @@
                 if (!res.ok) throw new Error();
                 const data = await res.json();
                 document.getElementById('stat-today').innerText = (data.totalToday || 0).toLocaleString();
-                // FIX TOP API Agar Tidak Eror
                 const topStr = data.topFeature;
                 document.getElementById('stat-top').innerText = (!topStr || topStr === "None" || topStr === "Error") ? "None" : topStr;
             } catch (e) {
@@ -273,30 +302,38 @@
         }
         function setTheme(t) { document.body.className = t; sb.classList.remove('active'); }
         
-        // FIX ENDPOINT URL DISPLAY
         function toggleInterface(id) {
             const ui = document.getElementById('ui-' + id);
             document.querySelectorAll('.interface-box').forEach(el => { if (el.id !== 'ui-' + id) el.style.display = 'none'; });
             ui.style.display = (ui.style.display === 'block') ? 'none' : 'block';
-            
             updateEndpointUrl(id);
         }
 
         function updateEndpointUrl(id) {
             const key = document.getElementById('key-' + id).value || "YOUR_APIKEY";
             let val = "";
-            if (id === 'npm') val = document.getElementById('q-' + id).value || "QUERY";
-            else val = document.getElementById('url-' + id).value || "URL";
+            let folder = "";
+            let paramName = "url";
+
+            if (id === 'npm') {
+                val = document.getElementById('q-' + id).value || "QUERY";
+                folder = '/api/search/';
+                paramName = 'q';
+            } else if (id === 'carbon') {
+                val = document.getElementById('code-' + id).value || "CODE";
+                folder = '/api/tools/';
+                paramName = 'code';
+            } else {
+                val = document.getElementById('url-' + id).value || "URL";
+                folder = '/api/download/';
+                paramName = 'url';
+            }
             
             const baseUrl = window.location.origin;
-            const folder = (id === 'npm') ? '/api/search/' : '/api/download/';
-            const paramName = (id === 'npm') ? 'q' : 'url';
-            
             const fullUrl = `${baseUrl}${folder}${id}?${paramName}=${encodeURIComponent(val)}&apikey=${key}`;
             document.getElementById('end-' + id).innerText = fullUrl;
         }
 
-        // Jalankan update URL setiap kali ngetik di input
         document.querySelectorAll('input').forEach(input => {
             input.addEventListener('input', (e) => {
                 const id = e.target.id.split('-')[1];
@@ -316,23 +353,36 @@
 
         async function runApi(type) {
             const key = document.getElementById('key-' + type).value;
-            const valInput = document.getElementById('url-' + type) || document.getElementById('q-' + type);
+            const valInput = document.getElementById('url-' + type) || document.getElementById('q-' + type) || document.getElementById('code-' + type);
             const val = valInput.value;
             if(!key || !val) return alert("Lengkapi data!");
             
-            const route = (type === 'npm') ? '/api/search/npm?q=' : '/api/download/' + type + '?url=';
-            const endpoint = route + encodeURIComponent(val) + '&apikey=' + key;
+            let endpoint = "";
+            if (type === 'npm') {
+                endpoint = `/api/search/npm?q=${encodeURIComponent(val)}&apikey=${key}`;
+            } else if (type === 'carbon') {
+                const color = document.getElementById('color-carbon').value || "#ADD8E6";
+                endpoint = `/api/tools/carbon?code=${encodeURIComponent(val)}&color=${encodeURIComponent(color)}&apikey=${key}`;
+            } else {
+                endpoint = `/api/download/${type}?url=${encodeURIComponent(val)}&apikey=${key}`;
+            }
             
             document.getElementById('res-' + type).style.display = 'block';
-            document.getElementById('json-' + type).innerText = "Processing...";
-            
-            try {
-                const res = await fetch(endpoint);
-                const data = await res.json();
-                document.getElementById('json-' + type).innerText = JSON.stringify(data, null, 2);
+
+            if (type === 'carbon') {
+                document.getElementById('img-carbon').src = endpoint;
+                document.getElementById('dl-carbon').href = endpoint;
                 fetchRealStats();
-            } catch (e) { 
-                document.getElementById('json-' + type).innerText = "Yah, error bos!"; 
+            } else {
+                document.getElementById('json-' + type).innerText = "Processing...";
+                try {
+                    const res = await fetch(endpoint);
+                    const data = await res.json();
+                    document.getElementById('json-' + type).innerText = JSON.stringify(data, null, 2);
+                    fetchRealStats();
+                } catch (e) { 
+                    document.getElementById('json-' + type).innerText = "Yah, error bos!"; 
+                }
             }
         }
 
