@@ -96,6 +96,7 @@
             <img src="https://files.catbox.moe/qnjkew.jpg" alt="Logo DevZx" class="profile-banner">
             <h1 style="font-size: 1.6rem; margin-bottom: 5px;">SELAMAT DATANG DI BANG DEVZX API</h1>
             <div class="typing-box"><span id="text-anim"></span></div>
+            
             <div class="stats-container">
                 <div class="stat-card">
                     <i class="fas fa-bolt"></i>
@@ -108,6 +109,7 @@
                     <span class="stat-txt">Top API Request</span>
                 </div>
             </div>
+            
             <p style="color: var(--text-sub); margin-top: 25px; font-size: 0.75rem;">Explore our features via the sidebar menu!</p>
         </div>
 
@@ -122,55 +124,10 @@
                     <div class="status-badge">● Ready</div>
                 </div>
                 <div id="ui-aio" class="interface-box">
-                    <div class="label-row"><span class="label-name">Endpoint URL</span></div>
-                    <div class="copy-box"><div class="copy-text" id="end-aio">Loading...</div><i class="far fa-copy" onclick="doCopy('end-aio')" style="cursor:pointer; color:var(--cyan)"></i></div>
                     <input type="text" id="key-aio" placeholder="Apikey (devzx18)">
                     <input type="text" id="url-aio" placeholder="Paste link video">
                     <button class="btn-submit" onclick="runApi('aio')">SUBMIT!</button>
-                    <div id="res-aio" style="display:none; margin-top:20px;">
-                        <div class="label-row"><span class="label-name">JSON Response</span><i class="far fa-copy" onclick="doCopy('json-aio')" style="cursor:pointer; color:var(--cyan)"></i></div>
-                        <pre id="json-aio"></pre>
-                    </div>
-                </div>
-            </div>
-
-            <div class="api-card">
-                <div style="font-weight: 800; font-size: 1.2rem;">YTMP4 Downloader</div>
-                <p style="color:var(--text-sub); font-size: 0.8rem; margin-bottom: 15px;">YouTube MP4 Download.</p>
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <button class="btn-get" onclick="toggleInterface('ytmp4')">/ GET</button>
-                    <div class="status-badge">● Ready</div>
-                </div>
-                <div id="ui-ytmp4" class="interface-box">
-                    <div class="label-row"><span class="label-name">Endpoint URL</span></div>
-                    <div class="copy-box"><div class="copy-text" id="end-ytmp4">Loading...</div><i class="far fa-copy" onclick="doCopy('end-ytmp4')" style="cursor:pointer; color:var(--cyan)"></i></div>
-                    <input type="text" id="key-ytmp4" placeholder="Apikey (devzx18)">
-                    <input type="text" id="url-ytmp4" placeholder="Paste link YouTube">
-                    <button class="btn-submit" onclick="runApi('ytmp4')">GAS!</button>
-                    <div id="res-ytmp4" style="display:none; margin-top:20px;">
-                        <div class="label-row"><span class="label-name">JSON Response</span><i class="far fa-copy" onclick="doCopy('json-ytmp4')" style="cursor:pointer; color:var(--cyan)"></i></div>
-                        <pre id="json-ytmp4"></pre>
-                    </div>
-                </div>
-            </div>
-
-            <div class="api-card">
-                <div style="font-weight: 800; font-size: 1.2rem;">Instagram Download</div>
-                <p style="color:var(--text-sub); font-size: 0.8rem; margin-bottom: 15px;">Download Reel/Photo IG.</p>
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <button class="btn-get" onclick="toggleInterface('ig')">/ GET</button>
-                    <div class="status-badge">● Ready</div>
-                </div>
-                <div id="ui-ig" class="interface-box">
-                    <div class="label-row"><span class="label-name">Endpoint URL</span></div>
-                    <div class="copy-box"><div class="copy-text" id="end-ig">Loading...</div><i class="far fa-copy" onclick="doCopy('end-ig')" style="cursor:pointer; color:var(--cyan)"></i></div>
-                    <input type="text" id="key-ig" placeholder="Apikey (devzx18)">
-                    <input type="text" id="url-ig" placeholder="Link Instagram">
-                    <button class="btn-submit" onclick="runApi('ig')">SUBMIT</button>
-                    <div id="res-ig" style="display:none; margin-top:20px;">
-                        <div class="label-row"><span class="label-name">JSON Response</span><i class="far fa-copy" onclick="doCopy('json-ig')" style="cursor:pointer; color:var(--cyan)"></i></div>
-                        <pre id="json-ig"></pre>
-                    </div>
+                    <pre id="json-aio" style="display:none;"></pre>
                 </div>
             </div>
 
@@ -182,44 +139,17 @@
                     <div class="status-badge">● Ready</div>
                 </div>
                 <div id="ui-tiktok" class="interface-box">
-                    <div class="label-row"><span class="label-name">Endpoint URL</span></div>
-                    <div class="copy-box"><div class="copy-text" id="end-tiktok">Loading...</div><i class="far fa-copy" onclick="doCopy('end-tiktok')" style="cursor:pointer; color:var(--cyan)"></i></div>
                     <input type="text" id="key-tiktok" placeholder="Apikey (devzx18)">
                     <input type="text" id="url-tiktok" placeholder="Paste link video">
                     <button class="btn-submit" onclick="runApi('tiktok')">SUBMIT</button>
-                    <div id="res-tiktok" style="display:none; margin-top:20px;">
-                        <div class="label-row"><span class="label-name">JSON Response</span><i class="far fa-copy" onclick="doCopy('json-tiktok')" style="cursor:pointer; color:var(--cyan)"></i></div>
-                        <pre id="json-tiktok"></pre>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="cat-search" class="cat-group hidden">
-            <h2 style="margin-bottom: 20px; border-left: 5px solid var(--accent); padding-left: 15px;">Search</h2>
-            <div class="api-card">
-                <div style="font-weight: 800; font-size: 1.2rem;">NPM Search</div>
-                <p style="color:var(--text-sub); font-size: 0.8rem; margin-bottom: 15px;">Cari package library Node.js.</p>
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <button class="btn-get" onclick="toggleInterface('npm')">/ GET</button>
-                    <div class="status-badge">● Ready</div>
-                </div>
-                <div id="ui-npm" class="interface-box">
-                    <div class="label-row"><span class="label-name">Endpoint URL</span></div>
-                    <div class="copy-box"><div class="copy-text" id="end-npm">Loading...</div><i class="far fa-copy" onclick="doCopy('end-npm')" style="cursor:pointer; color:var(--cyan)"></i></div>
-                    <input type="text" id="key-npm" placeholder="Apikey (devzx18)">
-                    <input type="text" id="q-npm" placeholder="Nama package">
-                    <button class="btn-submit" onclick="runApi('npm')">SUBMIT</button>
-                    <div id="res-npm" style="display:none; margin-top:15px;">
-                        <div class="label-row"><span class="label-name">JSON Response</span><i class="far fa-copy" onclick="doCopy('json-npm')" style="cursor:pointer; color:var(--cyan)"></i></div>
-                        <pre id="json-npm"></pre>
-                    </div>
+                    <pre id="json-tiktok" style="display:none;"></pre>
                 </div>
             </div>
         </div>
 
         <div id="cat-tools" class="cat-group hidden">
             <h2 style="margin-bottom: 20px; border-left: 5px solid var(--accent); padding-left: 15px;">Tools</h2>
+            
             <div class="api-card">
                 <div style="font-weight: 800; font-size: 1.2rem;">Carbon Code</div>
                 <p style="color:var(--text-sub); font-size: 0.8rem; margin-bottom: 15px;">Ubah teks kode jadi gambar estetik.</p>
@@ -228,18 +158,27 @@
                     <div class="status-badge">● Ready</div>
                 </div>
                 <div id="ui-carbon" class="interface-box">
-                    <div class="label-row"><span class="label-name">Endpoint URL</span></div>
-                    <div class="copy-box"><div class="copy-text" id="end-carbon">Loading...</div><i class="far fa-copy" onclick="doCopy('end-carbon')" style="cursor:pointer; color:var(--cyan)"></i></div>
                     <input type="text" id="key-carbon" placeholder="Apikey (devzx18)">
                     <input type="text" id="code-carbon" placeholder="Tulis kodemu di sini">
-                    <input type="text" id="color-carbon" placeholder="Background Color (opsional: #ADD8E6)">
                     <button class="btn-submit" onclick="runApi('carbon')">GENERATE!</button>
                     <div id="res-carbon" style="display:none; margin-top:15px; text-align: center;">
-                        <div class="label-row"><span class="label-name">Hasil Gambar</span></div>
-                        <img id="img-carbon" src="" alt="Carbon Result" style="max-width: 100%; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 10px;">
-                        <br>
-                        <a id="dl-carbon" href="#" target="_blank" class="btn-get" style="text-decoration: none; display: inline-block;">Download Image</a>
+                        <img id="img-carbon" src="" alt="Carbon Result" style="max-width: 100%; border-radius: 12px; margin-bottom: 10px;">
                     </div>
+                </div>
+            </div>
+
+            <div class="api-card">
+                <div style="font-weight: 800; font-size: 1.2rem;">ImgUpscaler</div>
+                <p style="color:var(--text-sub); font-size: 0.8rem; margin-bottom: 15px;">Tingkatkan resolusi gambar menjadi HD.</p>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <button class="btn-get" onclick="toggleInterface('imgupscaler')">/ GET</button>
+                    <div class="status-badge">● Ready</div>
+                </div>
+                <div id="ui-imgupscaler" class="interface-box">
+                    <input type="text" id="key-imgupscaler" placeholder="Apikey (devzx18)">
+                    <input type="text" id="url-imgupscaler" placeholder="Paste Link Gambar">
+                    <button class="btn-submit" onclick="runApi('imgupscaler')">UPSCALE!</button>
+                    <pre id="json-imgupscaler" style="display:none;"></pre>
                 </div>
             </div>
         </div>
@@ -248,30 +187,27 @@
     <div id="notif">Tersalin!</div>
 
     <script>
-        // ANTI-CURL
-        if (navigator.userAgent.toLowerCase().includes('curl') || navigator.userAgent.toLowerCase().includes('wget')) {
-            window.location.href = "about:blank";
-        }
-
+        // SCRIPT SYNC STATS DENGAN BACKEND/FIREBASE
         async function fetchRealStats() {
             try {
                 const res = await fetch('/api/stats');
-                if (!res.ok) throw new Error();
                 const data = await res.json();
-                document.getElementById('stat-today').innerText = (data.totalToday || 0).toLocaleString();
-                const topStr = data.topFeature;
-                document.getElementById('stat-top').innerText = (!topStr || topStr === "None" || topStr === "Error") ? "None" : topStr;
+                
+                // Update angka di dashboard
+                document.getElementById('stat-today').innerText = data.totalToday.toLocaleString() || "0";
+                document.getElementById('stat-top').innerText = data.topFeature || "None";
             } catch (e) {
-                document.getElementById('stat-today').innerText = "0";
-                document.getElementById('stat-top').innerText = "None";
+                console.log("Stats error lek");
             }
         }
-        fetchRealStats(); setInterval(fetchRealStats, 10000);
 
-        const sb = document.getElementById('sidebar');
-        const welcomeView = document.getElementById('welcome-view');
+        // Jalankan stats tiap 10 detik
+        fetchRealStats();
+        setInterval(fetchRealStats, 10000);
+
+        // --- SISANYA KODE ANIMASI & UI KAMU ---
         const textAnim = document.getElementById('text-anim');
-        const quotes = ["HI WELCOME IN BANG DEVZX API", "BANG DEVZX API GRATIS DAN COCOK BUAT PROJECT BOT WHATSAPP ATAU TELEGRAM KAMU", "REST API GRATISAN DENGAN FITUR MENARIK! 🚀", "BANG DEVZX API GRATIS SELAMANYA"];
+        const quotes = ["HI WELCOME IN BANG DEVZX API", "REST API GRATISAN DENGAN FITUR MENARIK! 🚀", "BANG DEVZX API GRATIS SELAMANYA"];
         let qIdx = 0, charIdx = 0, isDel = false;
         function type() {
             const current = quotes[qIdx];
@@ -284,122 +220,55 @@
         }
         type();
 
+        const sb = document.getElementById('sidebar');
         document.getElementById('open-sidebar').onclick = () => sb.classList.add('active');
         window.onclick = (e) => { if (e.target.id !== 'open-sidebar' && !sb.contains(e.target)) sb.classList.remove('active'); }
 
-        function goHome() {
-            document.querySelectorAll('.cat-group').forEach(el => el.classList.add('hidden'));
-            welcomeView.classList.remove('hidden');
-            document.getElementById('btn-back').style.display = 'none';
-            sb.classList.remove('active');
-        }
         function showCategory(cat) {
             document.querySelectorAll('.cat-group').forEach(el => el.classList.add('hidden'));
-            welcomeView.classList.add('hidden');
+            document.getElementById('welcome-view').classList.add('hidden');
             document.getElementById('cat-' + cat).classList.remove('hidden');
             document.getElementById('btn-back').style.display = 'block';
             sb.classList.remove('active');
         }
-        function setTheme(t) { document.body.className = t; sb.classList.remove('active'); }
-        
+
+        function goHome() {
+            document.querySelectorAll('.cat-group').forEach(el => el.classList.add('hidden'));
+            document.getElementById('welcome-view').classList.remove('hidden');
+            document.getElementById('btn-back').style.display = 'none';
+        }
+
         function toggleInterface(id) {
             const ui = document.getElementById('ui-' + id);
-            document.querySelectorAll('.interface-box').forEach(el => { if (el.id !== 'ui-' + id) el.style.display = 'none'; });
             ui.style.display = (ui.style.display === 'block') ? 'none' : 'block';
-            updateEndpointUrl(id);
-        }
-
-        function updateEndpointUrl(id) {
-            const key = document.getElementById('key-' + id).value || "YOUR_APIKEY";
-            let val = "";
-            let folder = "";
-            let paramName = "url";
-
-            if (id === 'npm') {
-                val = document.getElementById('q-' + id).value || "QUERY";
-                folder = '/api/search/';
-                paramName = 'q';
-            } else if (id === 'carbon') {
-                val = document.getElementById('code-' + id).value || "CODE";
-                folder = '/api/tools/';
-                paramName = 'code';
-            } else {
-                val = document.getElementById('url-' + id).value || "URL";
-                folder = '/api/download/';
-                paramName = 'url';
-            }
-            
-            const baseUrl = window.location.origin;
-            const fullUrl = `${baseUrl}${folder}${id}?${paramName}=${encodeURIComponent(val)}&apikey=${key}`;
-            document.getElementById('end-' + id).innerText = fullUrl;
-        }
-
-        document.querySelectorAll('input').forEach(input => {
-            input.addEventListener('input', (e) => {
-                const id = e.target.id.split('-')[1];
-                updateEndpointUrl(id);
-            });
-        });
-
-        function doCopy(id) {
-            const text = document.getElementById(id).innerText;
-            const temp = document.createElement('textarea');
-            temp.value = text; document.body.appendChild(temp);
-            temp.select(); document.execCommand('copy');
-            document.body.removeChild(temp);
-            const n = document.getElementById('notif'); n.style.display = 'block';
-            setTimeout(() => n.style.display = 'none', 3000);
         }
 
         async function runApi(type) {
             const key = document.getElementById('key-' + type).value;
-            const valInput = document.getElementById('url-' + type) || document.getElementById('q-' + type) || document.getElementById('code-' + type);
-            const val = valInput.value;
-            if(!key || !val) return alert("Lengkapi data!");
-            
+            const url = document.getElementById('url-' + type)?.value || document.getElementById('code-' + type)?.value;
+            if(!key || !url) return alert("Lengkapi data!");
+
             let endpoint = "";
-            if (type === 'npm') {
-                endpoint = `/api/search/npm?q=${encodeURIComponent(val)}&apikey=${key}`;
-            } else if (type === 'carbon') {
-                const color = document.getElementById('color-carbon').value || "#ADD8E6";
-                endpoint = `/api/tools/carbon?code=${encodeURIComponent(val)}&color=${encodeURIComponent(color)}&apikey=${key}`;
-            } else {
-                endpoint = `/api/download/${type}?url=${encodeURIComponent(val)}&apikey=${key}`;
-            }
-            
-            document.getElementById('res-' + type).style.display = 'block';
+            if(type === 'carbon') endpoint = `/api/tools/carbon?code=${encodeURIComponent(url)}&apikey=${key}`;
+            else if(type === 'imgupscaler') endpoint = `/api/tools/imgupscaler?url=${encodeURIComponent(url)}&apikey=${key}`;
+            else endpoint = `/api/download/${type}?url=${encodeURIComponent(url)}&apikey=${key}`;
 
-            if (type === 'carbon') {
+            if(type === 'carbon') {
+                document.getElementById('res-carbon').style.display = 'block';
                 document.getElementById('img-carbon').src = endpoint;
-                document.getElementById('dl-carbon').href = endpoint;
-                fetchRealStats();
             } else {
-                document.getElementById('json-' + type).innerText = "Processing...";
-                try {
-                    const res = await fetch(endpoint);
-                    const data = await res.json();
-                    document.getElementById('json-' + type).innerText = JSON.stringify(data, null, 2);
-                    fetchRealStats();
-                } catch (e) { 
-                    document.getElementById('json-' + type).innerText = "Yah, error bos!"; 
-                }
+                const pre = document.getElementById('json-' + type);
+                pre.style.display = 'block';
+                pre.innerText = "Processing...";
+                const res = await fetch(endpoint);
+                const data = await res.json();
+                pre.innerText = JSON.stringify(data, null, 2);
             }
+            // Update stats setelah pakai API
+            setTimeout(fetchRealStats, 2000);
         }
 
-        const canvas = document.getElementById('canvas-galaxy');
-        const ctx = canvas.getContext('2d');
-        let stars = [];
-        function initGalaxy() {
-            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-            stars = [];
-            for (let i = 0; i < 200; i++) stars.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, size: Math.random() * 2, speed: Math.random() * 0.4 });
-        }
-        function drawGalaxy() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height); ctx.fillStyle = "white";
-            stars.forEach(s => { ctx.beginPath(); ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2); ctx.fill(); s.y += s.speed; if (s.y > canvas.height) s.y = 0; });
-            requestAnimationFrame(drawGalaxy);
-        }
-        initGalaxy(); drawGalaxy();
+        function setTheme(t) { document.body.className = t; sb.classList.remove('active'); }
     </script>
 </body>
 </html>
