@@ -115,6 +115,26 @@
             <h2 style="margin-bottom: 20px; border-left: 5px solid var(--accent); padding-left: 15px;">Downloader</h2>
             
             <div class="api-card">
+                <div style="font-weight: 800; font-size: 1.2rem;">MediaFire Downloader</div>
+                <p style="color:var(--text-sub); font-size: 0.8rem; margin-bottom: 15px;">Download file dari MediaFire langsung.</p>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <button class="btn-get" onclick="toggleInterface('mediafire')">/ GET</button>
+                    <div class="status-badge">● Ready</div>
+                </div>
+                <div id="ui-mediafire" class="interface-box">
+                    <div class="label-row"><span class="label-name">Endpoint URL</span></div>
+                    <div class="copy-box"><div class="copy-text" id="end-mediafire">Loading...</div><i class="far fa-copy" onclick="doCopy('end-mediafire')" style="cursor:pointer; color:var(--cyan)"></i></div>
+                    <input type="text" id="key-mediafire" placeholder="Apikey (devzx18)">
+                    <input type="text" id="url-mediafire" placeholder="Paste link MediaFire">
+                    <button class="btn-submit" onclick="runApi('mediafire')">SUBMIT</button>
+                    <div id="res-box-mediafire" style="display:none; margin-top:20px;">
+                        <div class="label-row"><span class="label-name">JSON Response</span><i class="far fa-copy" onclick="doCopy('json-mediafire')" style="cursor:pointer; color:var(--cyan)"></i></div>
+                        <pre id="json-mediafire"></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="api-card">
                 <div style="font-weight: 800; font-size: 1.2rem;">AIO Downloader</div>
                 <p style="color:var(--text-sub); font-size: 0.8rem; margin-bottom: 15px;">All in one downloader bypass.</p>
                 <div style="display:flex; justify-content:space-between; align-items:center;">
@@ -134,7 +154,66 @@
                 </div>
             </div>
 
+            <div class="api-card">
+                <div style="font-weight: 800; font-size: 1.2rem;">TikTok Downloader</div>
+                <p style="color:var(--text-sub); font-size: 0.8rem; margin-bottom: 15px;">Video no watermark</p>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <button class="btn-get" onclick="toggleInterface('tiktok')">/ GET</button>
+                    <div class="status-badge">● Ready</div>
+                </div>
+                <div id="ui-tiktok" class="interface-box">
+                    <div class="label-row"><span class="label-name">Endpoint URL</span></div>
+                    <div class="copy-box"><div class="copy-text" id="end-tiktok">Loading...</div><i class="far fa-copy" onclick="doCopy('end-tiktok')" style="cursor:pointer; color:var(--cyan)"></i></div>
+                    <input type="text" id="key-tiktok" placeholder="Apikey (devzx18)">
+                    <input type="text" id="url-tiktok" placeholder="Paste link video">
+                    <button class="btn-submit" onclick="runApi('tiktok')">SUBMIT</button>
+                    <div id="res-box-tiktok" style="display:none; margin-top:20px;">
+                        <div class="label-row"><span class="label-name">JSON Response</span><i class="far fa-copy" onclick="doCopy('json-tiktok')" style="cursor:pointer; color:var(--cyan)"></i></div>
+                        <pre id="json-tiktok"></pre>
+                    </div>
+                </div>
             </div>
+
+            <div class="api-card">
+                <div style="font-weight: 800; font-size: 1.2rem;">Instagram Download</div>
+                <p style="color:var(--text-sub); font-size: 0.8rem; margin-bottom: 15px;">Download Reel/Photo IG.</p>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <button class="btn-get" onclick="toggleInterface('ig')">/ GET</button>
+                    <div class="status-badge">● Ready</div>
+                </div>
+                <div id="ui-ig" class="interface-box">
+                    <div class="label-row"><span class="label-name">Endpoint URL</span></div>
+                    <div class="copy-box"><div class="copy-text" id="end-ig">Loading...</div><i class="far fa-copy" onclick="doCopy('end-ig')" style="cursor:pointer; color:var(--cyan)"></i></div>
+                    <input type="text" id="key-ig" placeholder="Apikey (devzx18)">
+                    <input type="text" id="url-ig" placeholder="Link Instagram">
+                    <button class="btn-submit" onclick="runApi('ig')">SUBMIT</button>
+                    <div id="res-box-ig" style="display:none; margin-top:20px;">
+                        <div class="label-row"><span class="label-name">JSON Response</span><i class="far fa-copy" onclick="doCopy('json-ig')" style="cursor:pointer; color:var(--cyan)"></i></div>
+                        <pre id="json-ig"></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="api-card">
+                <div style="font-weight: 800; font-size: 1.2rem;">YTMP4 Downloader</div>
+                <p style="color:var(--text-sub); font-size: 0.8rem; margin-bottom: 15px;">YouTube MP4 Download.</p>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <button class="btn-get" onclick="toggleInterface('ytmp4')">/ GET</button>
+                    <div class="status-badge">● Ready</div>
+                </div>
+                <div id="ui-ytmp4" class="interface-box">
+                    <div class="label-row"><span class="label-name">Endpoint URL</span></div>
+                    <div class="copy-box"><div class="copy-text" id="end-ytmp4">Loading...</div><i class="far fa-copy" onclick="doCopy('end-ytmp4')" style="cursor:pointer; color:var(--cyan)"></i></div>
+                    <input type="text" id="key-ytmp4" placeholder="Apikey (devzx18)">
+                    <input type="text" id="url-ytmp4" placeholder="Paste link YouTube">
+                    <button class="btn-submit" onclick="runApi('ytmp4')">GAS!</button>
+                    <div id="res-box-ytmp4" style="display:none; margin-top:20px;">
+                        <div class="label-row"><span class="label-name">JSON Response</span><i class="far fa-copy" onclick="doCopy('json-ytmp4')" style="cursor:pointer; color:var(--cyan)"></i></div>
+                        <pre id="json-ytmp4"></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div id="cat-search" class="cat-group hidden">
             <h2 style="margin-bottom: 20px; border-left: 5px solid var(--accent); padding-left: 15px;">Search</h2>
@@ -290,6 +369,7 @@
             } else {
                 val = document.getElementById('url-' + id).value || "URL";
                 folder = '/api/download/';
+                paramName = 'url';
             }
             
             const baseUrl = window.location.origin;
