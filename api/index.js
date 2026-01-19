@@ -3,8 +3,8 @@ const CONFIG = {
     adminUser: "devzx2010",
     adminPass: "3d72c8418241101",
     ownerKey: "devzx2010", 
-    userKey: "devzx18",    
     ownerLimit: 10000,
+    userKey: "devzx18",    
     userLimit: 500
 };
 
@@ -42,11 +42,13 @@ const trackRequest = (featureName, category) => {
     };
 };
 
+// --- IMPORT MODULES ---
 const mediafire = require('./download/mediafire');
 const ytmp4 = require('./download/ytmp4');
 const igDownload = require('./download/ig');
 const tiktok = require('./download/tiktok');
 const npmSearch = require('./search/npm');
+const pinterestSearch = require('./search/pinterest'); // <--- Tambahkan ini
 const carbon = require('./tools/carbon');
 const upskel = require('./tools/upscaler');
 
@@ -74,7 +76,7 @@ app.get('/api/stats', async (req, res) => {
     } catch (e) { res.json({ totalToday: 0, topFeature: "Error" }); }
 });
 
-// FIX RUTE CARBON AGAR DATA TEKS TERKIRIM
+// --- ROUTES TOOLS ---
 app.get('/api/tools/carbon', trackRequest('Carbon Code', 'Tools'), async (req, res) => {
     const { code, color } = req.query;
     if (!code) return res.status(400).send("Kodenya mana?");
@@ -93,11 +95,16 @@ app.get('/api/tools/imgupscaler', trackRequest('ImgUpscaler', 'Tools'), async (r
     } catch (e) { res.status(500).send(e.message); }
 });
 
+// --- ROUTES DOWNLOADER ---
 app.get('/api/download/mediafire', trackRequest('MediaFire', 'Downloader'), mediafire);
 app.get('/api/download/ytmp4', trackRequest('YTMP4', 'Downloader'), ytmp4);
 app.get('/api/download/ig', trackRequest('Instagram', 'Downloader'), igDownload);
 app.get('/api/download/tiktok', trackRequest('TikTok', 'Downloader'), tiktok);
+
+// --- ROUTES SEARCH ---
 app.get('/api/search/npm', trackRequest('NPM Search', 'Search'), npmSearch);
+app.get('/api/search/pinterest', trackRequest('Pinterest Search', 'Search'), pinterestSearch); // <--- Tambahkan ini
 
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, '../docs.html')));
+
 module.exports = app;
